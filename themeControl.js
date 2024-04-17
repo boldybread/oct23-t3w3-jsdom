@@ -4,7 +4,7 @@ const themes = {
 		color: "darkgrey"
 	},
 	dark: {
-		background: "darkgrey",
+		background: "blue",
 		color: "#ffffff"
 	}
 };
