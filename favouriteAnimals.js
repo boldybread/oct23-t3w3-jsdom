@@ -1,6 +1,5 @@
 let animals = [
 	"fennec fox",
-    "wolf",
 	"lobster",
 	"frog",
 	"crocodile",
@@ -23,6 +22,10 @@ function createAnimalList(){
 
 	animals = [...new Set(animals)];
 
+	// 0. Find the existing list HTML and reset it
+	let rootOlNode = document.querySelector("ol");
+	rootOlNode.innerHTML = "";
+
 
 	animals.forEach((animal) => {
 		console.log("animal: " + animal);
@@ -44,7 +47,6 @@ function createAnimalList(){
 
 
 		// 2. Find the ol element that exists in the page and append the li into it
-		let rootOlNode = document.querySelector("ol");
 		rootOlNode.appendChild(newList);
 
 	});
@@ -54,7 +56,7 @@ function createAnimalList(){
 function removeAnimalFromList(targetAnimalId){
 	// 1. Find element in list with matching ID 
 	let targetListItem = document.getElementById(targetAnimalId);
-	targetListItem = document.getElementsByClassName
+	// targetListItem = document.getElementsByClassName
 	targetListItem.remove();
 
 	// 2. Check if ID is in array of animals 
@@ -79,6 +81,92 @@ function removeAnimalFromList(targetAnimalId){
 	// 4. Update or wipe & rebuild the animal list HTML 
 
 }
+
+
+function addAnimalToList(event, targetInputId){
+	// This prevents forms from reloading the page:
+	event.preventDefault();
+
+	// 1. Find the input field matching targetInputId
+	let targetInputField = document.getElementById(targetInputId);
+
+	// 2. Get the text value from the input field that we found 
+	let foundInputFieldValue = targetInputField.value;
+	console.log("Input field value to add to list is: " + foundInputFieldValue);
+
+
+	// 2.5 Sanitise & Validate for empty and duplicate data in the input field
+	// Remove whitespace from start and end of input
+	foundInputFieldValue = foundInputFieldValue.trim();
+
+	// array.include, array.filter or Set to check for duplicate
+	if (animals.includes(foundInputFieldValue)){
+		console.log("Animal already in list, not adding");
+		// 3.5 Reset the input field 
+		targetInputField.value = "";
+		return;
+	}
+	// checking for empty string 
+	if (foundInputFieldValue.length == 0){
+		console.log("Animal was empty, not adding!");
+		// 3.5 Reset the input field 
+		targetInputField.value = "";
+		return;
+	}
+
+	// 3. Push the text value into the animals array 
+	animals.push(foundInputFieldValue);
+
+	// 3.5 Reset the input field 
+	targetInputField.value = "";
+
+	// 4. Recreate the animal list
+	createAnimalList();
+	// Make sure this function deletes the existing list first!
+}
+
+
+let fakeFormButton = document.getElementById("fakeform-submit");
+fakeFormButton.addEventListener("click", (event) => {addAnimalToList(event, "fakeform-addAnimal")});
+
+let realFormButton = document.getElementById("realform-submit");
+realFormButton.addEventListener("click", (event) => {addAnimalToList(event, "realform-addAnimal")});
+
+
+
+
+function inputHelperReveal(targetElementId){
+	let hintElement = document.getElementById(targetElementId);
+	hintElement.style.display = "inherit";
+}
+
+function inputHelperHide(targetElementId){
+	let hintElement = document.getElementById(targetElementId);
+	hintElement.style.display = "none";
+}
+
+let realFormInput = document.getElementById("realform-addAnimal");
+realFormInput.addEventListener("focusin", () => {inputHelperReveal("realform-hint")});
+realFormInput.addEventListener("focusout", () => {inputHelperHide("realform-hint")});
+inputHelperHide("realform-hint");
+
+
+let fakeFormInput = document.getElementById("fakeform-addAnimal");
+fakeFormInput.addEventListener("focusin", () => {inputHelperReveal("fakeform-hint")});
+fakeFormInput.addEventListener("focusout", () => {inputHelperHide("fakeform-hint")});
+inputHelperHide("fakeform-hint");
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
